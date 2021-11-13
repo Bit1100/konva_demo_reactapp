@@ -1,0 +1,67 @@
+@import "./utility.css";
+
+/* Grid Wrapper */
+
+.grid-wrapper {
+    margin: 0rem auto;
+    padding: 2rem;
+    max-width: 100rem;
+    min-width: 80%;
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue-clr) var(--white-clr);
+}
+
+.grid-wrapper::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.grid-wrapper::-webkit-scrollbar-track {
+    border-radius: 0.5rem;
+    box-shadow: inset 0 0 0.5rem skyblue;
+}
+
+.grid-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 0.5rem;
+    background-color: $primary-clr;
+}
+
+.grid-box {
+    border: 5px solid var(--black-clr);
+    margin: 0rem auto;
+    width: 1020px;
+    height: 48vh;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 4rem auto 6rem auto;
+    z-index: 5;
+}
+
+.action .grid-toggler {
+    flex: 1;
+    text-align: center;
+}
+
+.action .grid-controller {
+    flex: 1;
+}
+
+input {
+    padding: 1rem;
+    font-size: 1.5rem;
+    border: 1px solid var(--black-clr);
+    transition: all 0.3s ease-in-out;
+    margin: 4rem 1rem;
+}
+
+input:hover,
+input:focus {
+    border-width: 2px;
+}

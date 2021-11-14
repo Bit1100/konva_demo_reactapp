@@ -1,18 +1,25 @@
 import "./styles/main.css";
 import { Stage, Layer, Line, Text } from "react-konva";
-import { useState } from "react";
-import { lines } from "./data.js";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 toast.configure();
 
 function App() {
-  const { horizontalLines, verticalLines } = lines;
+  const toggleButton = useRef({});
 
-  const [visibility, setVisibility] = useState(true);
-  const [numOfLines, setNumOfLines] = useState(horizontalLines.length);
+  useEffect(() => {
+    toggleButton.current.disabled = true;
+  }, []);
+
+  const [visibility, setVisibility] = useState(false);
   const [line, setLine] = useState("");
+  const [gridLines, setGridLines] = useState(0);
+  const [canvaWidth] = useState(768);
+  const [canvaHeight] = useState(512);
+  const [verticalSpace, setVerticalSpace] = useState(0);
+  const [horizontalSpace, setHorizontalSpace] = useState(0);
 
   //  Error Msg Popup
   const msgPopup = (msg) => {
@@ -27,28 +34,57 @@ function App() {
     });
   };
 
+  const arrayGenerator = () => {
+    let numOfLines = [];
+    for (let i = 0; i < gridLines; i++) {
+      numOfLines.push(i);
+    }
+    return numOfLines;
+  };
+
   // Form validation
   const updateGrid = (e) => {
     e.preventDefault();
     const noOfLines = +e.target.line.value;
+
+    // Test for the empty submission
     if (!noOfLines) {
       msgPopup("Input field cannot be empty");
       return;
     }
 
-    if (noOfLines > 21 || noOfLines < 1) {
-      msgPopup("Enter Number between 1 and 21");
+    // Test for the whole number
+    if (noOfLines - Math.floor(noOfLines) !== 0) {
+      msgPopup("Please enter a whole number");
       e.target.line.value = "";
       return;
     }
 
+    // Test for the value less than zero
+    if (noOfLines < 0) {
+      msgPopup("Please enter positive value");
+      e.target.line.value = "";
+      return;
+    }
+
+    // Test for the non-numeric value
     if (isNaN(noOfLines)) {
       msgPopup("Please Enter the numeric digit [1-21]");
       e.target.line.value = "";
       return;
     }
 
-    setNumOfLines(noOfLines);
+    setVisibility(true);
+
+    setGridLines(noOfLines);
+
+    toggleButton.current.disabled = false;
+
+    /* Calculating the space based on the noOfLines entered by the user */
+    setVerticalSpace(Math.ceil(canvaWidth / noOfLines));
+
+    setHorizontalSpace(Math.ceil(canvaHeight / noOfLines));
+
     e.target.line.value = "";
   };
 
@@ -57,31 +93,60 @@ function App() {
       <h1 className="heading">Grid Controller App</h1>
       <div className="grid-wrapper">
         <div className="grid-box">
-          {visibility ? (
-            <Stage width={1010} height={1010}>
-              <Layer>
-                {/* <Text text="Grid lines" x={100} y={400} /> */}
-                {horizontalLines.slice(0, numOfLines).map((line) => {
-                  return (
-                    <Line points={line.points} stroke="red" strokeWidth={5} />
-                  );
-                })}
-                {verticalLines.slice(0, numOfLines).map((line) => {
-                  return (
-                    <Line points={line.points} stroke="blue" strokeWidth={5} />
-                  );
-                })}
-              </Layer>
-            </Stage>
-          ) : (
-            ""
-          )}
+          <Stage width={canvaWidth} height={canvaHeight}>
+            <Layer>
+              {visibility ? (
+                <div>
+                  {/* <Text text="Grid lines" x={100} y={400} /> */}
+                  {arrayGenerator().map((item, index) => {
+                    return (
+                      <Line
+                        key={item}
+                        points={[
+                          0,
+                          horizontalSpace * index,
+                          canvaWidth,
+                          horizontalSpace * index,
+                        ]}
+                        stroke="red"
+                        strokeWidth={1}
+                      />
+                    );
+                  })}
+                  {arrayGenerator().map((item, index) => {
+                    return (
+                      <Line
+                        key={item}
+                        points={[
+                          index * verticalSpace,
+                          0,
+                          index * verticalSpace,
+                          canvaHeight,
+                        ]}
+                        stroke="blue"
+                        strokeWidth={1}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <Text
+                  x={225}
+                  y={215}
+                  text="Empty Canva"
+                  fontSize={50}
+                  fill="red"
+                />
+              )}
+            </Layer>
+          </Stage>
         </div>
       </div>
       <h2 className="heading">Action Center</h2>
       <div className="action">
         <div className="grid-toggler">
           <button
+            ref={toggleButton}
             className="btn"
             onClick={() => setVisibility((prevState) => !prevState)}
           >

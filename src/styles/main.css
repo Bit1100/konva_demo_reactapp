@@ -29,10 +29,10 @@
 .grid-box {
     border: 5px solid var(--black-clr);
     margin: 0rem auto;
-    width: 1020px;
-    height: 48vh;
+    width: 780px;
+    height: 520px;
     overflow: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .action {

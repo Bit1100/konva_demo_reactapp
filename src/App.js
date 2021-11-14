@@ -104,9 +104,9 @@ function App() {
                         key={item}
                         points={[
                           0,
-                          horizontalSpace * index,
+                          horizontalSpace * index + 2,
                           canvaWidth,
-                          horizontalSpace * index,
+                          horizontalSpace * index + 2,
                         ]}
                         stroke="red"
                         strokeWidth={1}
@@ -118,9 +118,9 @@ function App() {
                       <Line
                         key={item}
                         points={[
-                          index * verticalSpace,
+                          index * verticalSpace + 2,
                           0,
-                          index * verticalSpace,
+                          index * verticalSpace + 2,
                           canvaHeight,
                         ]}
                         stroke="blue"
